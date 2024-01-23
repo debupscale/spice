@@ -1,0 +1,446 @@
+
+
+
+
+  <!-- <img class="draggableImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='30'%3E%3Cpath d='M10 15 l15 0 l2.5 -5 l5 10 l5 -10 l5 10 l5 -10 l5 10 l2.5 -5 l15 0' stroke='black' stroke-width='1' stroke-linejoin='bevel' fill='none'/%3E%3C/svg%3E" alt="Draggable SVG Image"> -->
+  <input type="number" id="resistance" name="resistance" min="1" value="1">
+  <button id="addHorizontalResistor">Add Horizontal Resistor</button>
+  <button id="addVerticalResistor">Add Vertical Resistor</button>
+
+  <script>
+
+      // Get the draggable image element and the button
+      var addHorizontalResistorButton = document.getElementById("addHorizontalResistor");
+      addHorizontalResistorButton.addEventListener("click", addHorizontalResistor);
+      var addVerticalResistorButton = document.getElementById("addVerticalResistor");
+      addVerticalResistorButton.addEventListener("click", addVerticalResistor);
+      let resistor_index=0
+      let point_id=0
+
+      let circuit_5={
+       'points':{
+                'p1':['R1','R2']
+                },
+       'resistors':{
+        'R1':['p1','p2']
+            
+       },
+       'capacitors':{
+                
+       }         
+      }
+
+      // Variables to store the initial mouse position and the offset of the image
+      var offsetX, offsetY;
+    
+      // Function to handle the start of the drag operation
+    //   let horizontalResistorTemplate="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000000' height='40px' width='20px' version='1.1' viewBox='0 0 20 40' xml:space='preserve'%3E%3Crect x='7' y='0' width='6' height='40' /%3E%3Crect x='0' y='18' width='20' height='4' /%3E%3C/svg%3E"
+      let horizontalResistorTemplate="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='30' %3E%3Cpath d='M10 15 l15 0 l2.5 -5 l5 10 l5 -10 l5 10 l5 -10 l5 10 l2.5 -5 l15 0' stroke='black' stroke-width='1' stroke-linejoin='bevel' fill='none'/%3E%3C/svg%3E"
+      let verticalResistorTemplate="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' transform='rotate(90)'%3E%3Cpath d='M10 15 l15 0 l2.5 -5 l5 10 l5 -10 l5 10 l5 -10 l5 10 l2.5 -5 l15 0' stroke='black' stroke-width='1' stroke-linejoin='bevel' fill='none'/%3E%3C/svg%3E"
+      let pointTemplate="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Ccircle cx='5' cy='5' r='5' fill='black' /%3E%3C/svg%3E"
+
+    //   let verticalCapacitorTemplate="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' transform='rotate(90)'%3E%3Cpath d='M10 15 l15 0 l2.5 -5 l5 10 l5 -10 l5 10 l5 -10 l5 10 l2.5 -5 l15 0' stroke='black' stroke-width='1' stroke-linejoin='bevel' fill='none'/%3E%3C/svg%3E"
+
+      // Function to add a new replica of the image
+      function addHorizontalResistor() {
+        
+        let resistor=document.createElement('img')
+        resistor.src= horizontalResistorTemplate
+        resistor.id='R_'+resistor_index
+        resistor.className='resistor'
+        resistor.style.position='absolute'
+        document.body.appendChild(resistor);
+        resistor.addEventListener('mousedown', dragStart);
+        //resistor.addEventListener('mousemove', drag)
+        resistor.addEventListener('mouseup', dragStop);
+        resistor_index=resistor_index+1
+
+        circuit.resistors['R_'+resistor_index] = document.getElementById('resistance').value;
+        console.log( circuit)
+    
+      }
+      function addVerticalResistor() {
+
+        let resistor=document.createElement('img')
+        resistor.src= verticalResistorTemplate
+        resistor.id='R'+resistor_index
+        resistor.style.position='absolute'
+        document.body.appendChild('resistor');
+        resistor.addEventListener('mousedown', dragStart);
+        //resistor.addEventListener('mousemove', drag)
+        resistor.addEventListener('mouseup', dragStop);
+
+        resistor_index=resistor_index+1
+
+
+}
+      function dragStart(e) {
+        e.preventDefault();
+       
+        let offsetX = e.clientX - this.getBoundingClientRect().left;
+        let offsetY = e.clientY - this.getBoundingClientRect().top;
+        //console.log(offsetX ,offsetY,this.getBoundingClientRect())
+        // var eventListeners = getEventListeners(this);
+        // console.log(eventListeners)
+        this.addEventListener('mousemove', drag)
+        // this.addEventListener('mousemove', (e)=>drag(e,this.id,true));
+
+       }
+
+       function dragStop(e) {
+        //console.log('listener removed',this)
+        this.removeEventListener('mousemove', drag);   
+        // this.removeEventListener('mousedown', dragStart);  
+       }
+
+       function drag(e) {
+
+       
+        // Calculate the new position of the resistor
+        let x = e.clientX-35.48 ;
+        let y = e.clientY-19 ;
+        //console.log(x,y,R.style.left)
+
+        this.style.left = x + 'px';
+        this.style.top = y + 'px';}
+
+        function addPoint(){
+            console.log('point added',point_id)
+            point_id=point_id+1
+        }
+        function convertPositionToNumber(position){
+            position=position.repla
+        }
+        function lookForPoints(){
+            let resistors=document.getElementsByClassName('resistor')
+            for(resistor_1=0;resistor_1<resistors.length;resistor_1++){
+                for(resistor_2=resistor_1+1;resistor_2<resistors.length;resistor_2++){
+                  
+                 
+                    if(Math.abs(parseInt(resistors[resistor_1].style.top)-parseInt(resistors[resistor_2].style.top))<1  ){
+                        
+                        if(Math.abs(parseInt(resistors[resistor_1].style.left)-parseInt(resistors[resistor_2].style.left))<65 ){
+                            if(Math.abs(parseInt(resistors[resistor_1].style.left)-parseInt(resistors[resistor_2].style.left))>50){
+                                if(resistor_1 !=resistor_2){
+                                  console.log('point found')
+                                  let point=document.createElement('img')
+                                  point.src= pointTemplate
+                                  point.id='P_'+point_id
+                                  point.style.position='absolute'
+                                  let left=Math.max(parseInt(resistors[resistor_1].style.left),parseInt(resistors[resistor_2].style.left))+10
+                                  point.style.left=left+'px'
+                                  let top=parseInt(resistors[resistor_2].style.top)+10
+                                  point.style.top=top+'px'
+                                  document.body.appendChild(point);
+                                  circuit.points['P_'+point_id] = [resistor_1,resistor_2];
+                                  console.log( circuit)
+
+
+                                }
+
+                            }
+
+                        }
+                        
+                       
+                       
+                    }
+               
+            }
+            }
+           
+
+        }
+        
+
+//         function dragEnd() {
+//     // Remove event listeners for dragging and dragging end
+//     document.removeEventListener('mousemove', drag);
+//     document.removeEventListener('mouseup', dragEnd);
+//   }
+      document.addEventListener('mousemove', lookForPoints);
+//   document.addEventListener('mouseup', dragEnd);
+
+
+
+
+
+
+let start_node='A'
+let end_node='C'
+let paths=[]
+let voltage=6
+let alpha=0.0005
+let alpha_current=0.02
+
+let generalCircuit_1 = {
+  "circuitName": "GeneralCircuit",
+  "nodes": ["A", "B", "C","D","E","F","G"],
+  "resistors": {
+    "R1": { "nodes": ["A", "B"], "value": 4 },
+    "R2": { "nodes": ["B", "D"], "value": 4 },
+    "R3": { "nodes": ["D", "E"], "value": 4 },
+    "R4": { "nodes": ["E", "F"], "value": 4 },
+    "R5": { "nodes": ["F", "G"], "value": 4 },
+    "R6": { "nodes": ["G", "C"], "value": 4 },
+    "R7": { "nodes": ["B", "G"], "value": 4 },
+    "R8": { "nodes": ["D", "F"], "value": 4 },
+
+
+   
+
+  },
+  "voltageSources": {
+    "V1": { "positive": "A", "negative": "C", "value": voltage }
+  }
+};
+
+
+
+function getCircuitResistorsNameConnectedToNode(node) {
+  // Assume circuit is the global circuit object
+  let connectedResistors = [];
+
+  // Iterate over the resistors in the circuit
+  for (let resistor in generalCircuit_1.resistors) {
+    // Check if the resistor is connected to the specified node
+    if (generalCircuit_1.resistors[resistor].nodes.includes(node)) {
+      connectedResistors.push(resistor);
+    }
+  }
+
+  return connectedResistors;
+}
+
+
+function getCircuitResistorsConnectedToNode(node) {
+  // Assume circuit is the global circuit object
+  let connectedResistors = [];
+
+  // Iterate over the resistors in the circuit
+  for (let resistor in generalCircuit_1.resistors) {
+    // Check if the resistor is connected to the specified node
+    if (generalCircuit_1.resistors[resistor].nodes.includes(node)) {
+      connectedResistors.push(generalCircuit_1.resistors[resistor].value);
+    }
+  }
+
+  return connectedResistors;
+}
+
+
+function calculateTotalResistance(node) {
+  // Assume circuit is the global circuit object
+  let resistorsConnectedToNode = getCircuitResistorsConnectedToNode(node);
+
+  // Sum up the resistances
+  let totalResistance = resistorsConnectedToNode.reduce((sum, resistor) => {
+    // Assume resistorValues is an object holding the resistance values for each resistor
+    return sum + resistor;
+  }, 0);
+
+  return totalResistance;
+}
+
+
+const findConnectedNode=(node)=>{
+    //console.log('node',node)
+    let connectedNodes=[]
+    for(resistor in generalCircuit_1.resistors){
+    let nodes=generalCircuit_1.resistors[resistor].nodes
+        if(node[node.length-1]==nodes[0]  ){
+            if(!node.includes(nodes[1])){
+                connectedNodes.push(node+nodes[1])
+            }     
+    }
+    else if(node[node.length-1]==nodes[1]  ){
+        if(!node.includes(nodes[0])){
+        connectedNodes.push(node+nodes[0])}
+    }
+    
+
+  }
+  //console.log('node',connectedNodes)
+  
+  connectedNodes.map(node=>{
+    //console.log('entering',node)
+    if(node[node.length-1]!=end_node){
+        findConnectedNode(node)
+    }
+    else{
+        paths.push(node)
+    }
+  })
+  return connectedNodes
+}
+findConnectedNode(start_node)
+console.log('paths',paths)
+
+// function findpaths(){
+//     let paths=[]
+//     let start_node='A'
+//     let end_node='E'
+//     return findConnectedNode(start_node)
+// }
+
+// console.log(findpaths())
+
+
+function findResistorGivenNodes(nodeA,nodeB){
+    for (let resistor in generalCircuit_1.resistors) {
+        let { nodes, value } = generalCircuit_1.resistors[resistor];
+        if((nodeA==nodes[0] && nodeB==nodes[1]) || (nodeA==nodes[1] && nodeB==nodes[0]))
+        return resistor
+    }
+}
+
+
+
+// console.log('resistor',generalCircuit_1.resistors[findResistorGivenNodes("B","E")])
+
+let prev_error_path=[]
+let error_path=[]
+let error_node={}
+let prev_error_node={}
+let prev_nodeVoltages=[]
+function solveCircuit(circuit_1) {
+  // Step 1: Initialize node voltages
+  let nodeVoltages = {};
+  for (let node of circuit_1.nodes){
+    nodeVoltages[node] =Math.floor(Math.random() * voltage); // Initialize to some initial value 
+    prev_nodeVoltages[node] =Math.floor(Math.random() * voltage);
+}
+
+  nodeVoltages[start_node]=voltage
+  nodeVoltages[end_node]=0
+  prev_nodeVoltages[start_node]=voltage
+  prev_nodeVoltages[end_node]=0
+  // Step 2: Initialize resistor currents
+  let resistorCurrents = {
+    "R1":5,
+    "R2":1,
+    "R3":1,
+    "R4":1,
+    "R5":1,
+    "R6":1,
+    "R7":1,
+    "R8":1,
+
+ 
+
+  };
+  
+  // Step 3: Define a tolerance for convergence
+  const tolerance = 1e-6;
+  
+  for(let i=0;i<paths.length;i++){
+        prev_error_path.push(2)
+       
+    }
+  for(let i=0;i<generalCircuit_1.nodes.length;i++){
+    prev_error_node[generalCircuit_1.nodes[i]]=2
+  }
+
+  // Step 4: Perform iterations to solve for node voltages
+  for (let iteration = 0; iteration < 100; iteration++) {
+   console.log('---------------->',iteration)
+   
+
+ //KVL
+
+    for(let i=0;i<paths.length;i++){
+            let  path=paths[i]
+            let potential_diff_path=0
+            let path_eqn=path 
+            for(let j=1;j<path.length;j++){
+                let resistor=findResistorGivenNodes(path[j],path[j-1])
+                
+                potential_diff_path+=resistorCurrents[resistor]*generalCircuit_1.resistors[resistor].value
+                //path_eqn+=' I-> '+resistorCurrents[resistor]+' R->'+generalCircuit_1.resistors[resistor].value
+                
+                
+            }
+           
+            error_path[i]=potential_diff_path-voltage
+            console.log('Total error path', error_path[i],path_eqn)
+            
+            let gradient=1
+            for(let j=0;j<path.length;j++){
+                if(path[j] !=start_node && path[j] !=end_node){
+                   nodeVoltages[path[j]] = nodeVoltages[path[j]] -error_path[i]/path.length//*0.1                 
+                } 
+            }              
+    }
+
+
+
+
+    for (let resistor in circuit_1.resistors) {
+      let { nodes, value } = circuit_1.resistors[resistor];
+
+      resistorCurrents[resistor] =(nodeVoltages[nodes[0]] - nodeVoltages[nodes[1]]) / value;
+    }
+
+   for (let node of circuit_1.nodes) {
+
+  if (node !=start_node && node !=end_node) {
+
+    let totalCurrentInNode=0
+    getCircuitResistorsNameConnectedToNode(node).map((resistor,nodes,value)=>{
+        if(generalCircuit_1.resistors[resistor].nodes[0]==node){
+            totalCurrentInNode+=resistorCurrents[resistor]
+        }
+        else{
+            totalCurrentInNode-=resistorCurrents[resistor]
+        }
+        // totalCurrentInNode+=resistorCurrents[resistor]
+       
+    })
+   
+    
+    let voltageChange = totalCurrentInNode*calculateTotalResistance(node)
+    console.log('CurrentNode',node, voltageChange);
+    //console.log('totalCurrentNode', totalCurrentInNode,nodeVoltages[node],resistorCurrents);
+    // error_node[node]=voltageChange
+    // let gradient_node=(error_node[node]-prev_error_node[node])/(nodeVoltages[node]-prev_nodeVoltages[node])
+    // console.log('gradient node->',gradient_node)
+    // let total_error_path=0
+
+  
+       nodeVoltages[node] = nodeVoltages[node] - voltageChange*0.1;
+
+   
+    
+   
+
+
+    for (let resistor in circuit_1.resistors) {
+      let { nodes, value } = circuit_1.resistors[resistor];
+      resistorCurrents[resistor] = resistorCurrents[resistor]-alpha*(nodeVoltages[nodes[0]] - nodeVoltages[nodes[1]]) / value;
+    }
+  }
+}
+
+    // Step 8: Check for convergence
+    if (Math.max(...Object.values(resistorCurrents)) < tolerance) {
+      //break; // Converged
+    }
+
+  }
+
+  // Step 9: Return the solved node voltages and resistor currents
+  return { nodeVoltages, resistorCurrents };
+}
+
+// Example usage with circuit_1
+
+
+
+let solution_1 = solveCircuit(generalCircuit_1);
+console.log('Node Voltages:', solution_1.nodeVoltages);
+console.log('Resistor Currents:', solution_1.resistorCurrents);
+
+
+  </script>
+
+
